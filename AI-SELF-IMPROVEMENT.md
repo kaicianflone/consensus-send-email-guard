@@ -44,3 +44,7 @@ This skill turns communication quality into measurable governance: fewer unsafe 
 - **State substrate**: consensus-tools decision/persona artifacts
 - **Primary output**: `decision` + updated `persona_set`
 - **Primary benefit**: risk-controlled outbound communication
+
+## Tool-call boundary
+
+To avoid orchestration drift, this skill routes board operations through the consensus-interact contract surface (directly or via guard-core wrappers). This preserves a single governance interaction model while allowing domain-specific decision logic.

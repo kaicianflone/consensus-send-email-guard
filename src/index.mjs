@@ -6,10 +6,12 @@ import {
   aggregateVotes,
   updateReputations,
   makeIdempotencyKey,
-  getLatest,
+  readBoardPolicy,
+  getLatestPersonaSet,
   getPersonaSet,
-  getDecisionByKey,
+  getDecisionByIdempotency,
   writeArtifact,
+  writeDecision,
 } from 'consensus-guard-core/src/index.mjs';
 
 const DEFAULT_POLICY = {
@@ -42,11 +44,11 @@ export async function handler(input, opts = {}) {
     const validationError = validateInput(input);
     if (validationError) return err(board_id || '', 'INVALID_INPUT', validationError);
 
-    const policy = (await getLatest(board_id, 'board_policy', statePath)) || DEFAULT_POLICY;
+    const policy = (await readBoardPolicy(board_id, statePath)) || DEFAULT_POLICY;
 
     const idempotency_key = makeIdempotencyKey({ board_id, email_draft: input.email_draft, constraints: input.constraints || {}, sender_profile: input.sender_profile || {}, persona_set_id: input.persona_set_id || null });
 
-    const prior = await getDecisionByKey(board_id, idempotency_key, statePath);
+    const prior = await getDecisionByIdempotency(board_id, idempotency_key, statePath);
     if (prior?.response) {
       return prior.response;
     }
@@ -56,7 +58,7 @@ export async function handler(input, opts = {}) {
       personaSet = await getPersonaSet(board_id, input.persona_set_id, statePath);
     }
     if (!personaSet) {
-      personaSet = await getLatest(board_id, 'persona_set', statePath);
+      personaSet = await getLatestPersonaSet(board_id, statePath);
     }
     if (!personaSet) {
       const generated = await generatePersonaSet({
@@ -147,7 +149,7 @@ export async function handler(input, opts = {}) {
       board_writes: []
     };
 
-    const decisionWrite = await writeArtifact(board_id, 'decision', { ...decisionPayload, response }, statePath);
+    const decisionWrite = await writeDecision(board_id, { ...decisionPayload, response }, statePath);
 
     const personaWrite = await writeArtifact(board_id, 'persona_set', updatedPersonaSet, statePath);
 
