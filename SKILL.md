@@ -1,42 +1,48 @@
 ---
 name: consensus-send-email-guard
-description: Open-source Consensus.Tools skill for governed AI decisions with board-native artifacts, strict JSON contracts, and deterministic policy behavior.
+description: Persona-weighted pre-send email governance for AI systems. Produces APPROVE/BLOCK/REWRITE decisions, writes decision artifacts to the board ledger, updates persona reputation over time, and returns strict machine-parseable JSON.
 homepage: https://github.com/kaicianflone/consensus-send-email-guard
 source: https://github.com/kaicianflone/consensus-send-email-guard
 ---
 
 # consensus-send-email-guard
 
-This skill is part of the Consensus.Tools ecosystem and is designed for production-grade agent governance.
+`consensus-send-email-guard` is a production-style outbound communication guardrail.
 
-## Why this skill exists
+## What this skill does
 
-Most agent systems fail because a single model decides and executes without explicit arbitration. This skill addresses that by applying consensus-style controls:
+- evaluates an email draft with a persona panel
+- aggregates votes by reputation (weighted approval policy)
+- enforces hard-block categories (sensitive data, legal/medical certainty, disallowed guarantees)
+- returns final decision: `APPROVE | BLOCK | REWRITE`
+- writes `decision` and updated `persona_set` artifacts to board state
 
-- structured multi-perspective evaluation
-- hard-block safety checks
-- deterministic aggregation and replayable outputs
-- board-native artifact persistence for auditing
+## Why this matters
 
-## Core capabilities
+Email is high-impact and irreversible once sent. This skill reduces hallucinated promises and policy-violating claims before external side effects occur.
 
-- strict input/output JSON contracts for pipeline integration
-- deterministic policy evaluation where possible
-- idempotent retry behavior to avoid duplicate side effects
-- versioned artifacts written to board ledger history
+## Ecosystem role
 
-## Stack assumptions
+Stack position:
 
-- built to compose with consensus-interact workflows
-- uses consensus-tools board/job/submission primitives
-- designed to integrate with persona-generator persona_set artifacts
+`consensus-tools -> consensus-interact pattern -> persona_set -> send-email-guard`
+
+It converts raw generation into governed action with auditability.
+
+## Governance and learning
+
+- strict JSON contracts for automation pipelines
+- idempotent retries to prevent duplicate reputation mutation
+- reputation updates calibrate evaluator influence over time
+
+## Use cases
+
+- customer-facing outbound messaging
+- partner/legal-sensitive communications
+- automated campaign quality gates
 
 ## Quick start
 
-Use the repo examples and run script to execute locally.
-
-## Expected outcomes
-
-- a decision/result artifact persisted to board state
-- optional updated persona_set artifact for adaptive governance
-- machine-parseable output suitable for automation systems
+```bash
+node --import tsx run.js --input ./examples/email-input.json
+```
