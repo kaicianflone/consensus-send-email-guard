@@ -56,3 +56,11 @@ This skill is wired to the consensus-interact contract boundary (via shared cons
 - idempotent decision lookup
 
 This keeps board orchestration standardized across skills.
+
+## Invoke Contract
+
+This skill exposes a canonical entrypoint:
+
+- `invoke(input, opts?) -> Promise<OutputJson | ErrorJson>`
+
+`invoke()` starts the guard flow, which then executes persona evaluation and consensus-interact-contract board operations (via shared guard-core wrappers where applicable).

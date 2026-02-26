@@ -163,3 +163,7 @@ export async function handler(input, opts = {}) {
     return err(board_id || '', 'SEND_EMAIL_GUARD_FAILED', e.message || 'unknown error', { statePath });
   }
 }
+
+export async function invoke(input, opts = {}) {
+  return handler(input, opts);
+}
