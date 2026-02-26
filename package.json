@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@consensus-tools/consensus-tools": "file:../consensus-tools",
+    "consensus-guard-core": "file:../consensus-guard-core",
     "tsx": "^4.20.3"
   },
   "license": "MIT"

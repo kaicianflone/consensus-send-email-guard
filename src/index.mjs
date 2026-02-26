@@ -1,9 +1,16 @@
 import crypto from 'node:crypto';
 import { handler as generatePersonaSet } from '../../consensus-persona-generator/src/index.mjs';
 import { generatePersonaVotes, generateRewritePatch } from './llm.mjs';
-import { aggregateVotes, updateReputations } from './policy.mjs';
-import { getDecisionByIdempotency, getLatestPersonaSet, getPersonaSet, readBoardPolicy, writeArtifact } from './board.mjs';
 import { validateInput } from './validate.mjs';
+import {
+  aggregateVotes,
+  updateReputations,
+  makeIdempotencyKey,
+  getLatest,
+  getPersonaSet,
+  getDecisionByKey,
+  writeArtifact,
+} from 'consensus-guard-core/src/index.mjs';
 
 const DEFAULT_POLICY = {
   method: 'WEIGHTED_APPROVAL_VOTE',
@@ -35,14 +42,11 @@ export async function handler(input, opts = {}) {
     const validationError = validateInput(input);
     if (validationError) return err(board_id || '', 'INVALID_INPUT', validationError);
 
-    const policy = (await readBoardPolicy(board_id, statePath)) || DEFAULT_POLICY;
+    const policy = (await getLatest(board_id, 'board_policy', statePath)) || DEFAULT_POLICY;
 
-    const idempotency_key = crypto
-      .createHash('sha256')
-      .update(JSON.stringify({ board_id, email_draft: input.email_draft, constraints: input.constraints || {}, sender_profile: input.sender_profile || {}, persona_set_id: input.persona_set_id || null }))
-      .digest('hex');
+    const idempotency_key = makeIdempotencyKey({ board_id, email_draft: input.email_draft, constraints: input.constraints || {}, sender_profile: input.sender_profile || {}, persona_set_id: input.persona_set_id || null });
 
-    const prior = await getDecisionByIdempotency(board_id, idempotency_key, statePath);
+    const prior = await getDecisionByKey(board_id, idempotency_key, statePath);
     if (prior?.response) {
       return prior.response;
     }
@@ -52,7 +56,7 @@ export async function handler(input, opts = {}) {
       personaSet = await getPersonaSet(board_id, input.persona_set_id, statePath);
     }
     if (!personaSet) {
-      personaSet = await getLatestPersonaSet(board_id, statePath);
+      personaSet = await getLatest(board_id, 'persona_set', statePath);
     }
     if (!personaSet) {
       const generated = await generatePersonaSet({
@@ -143,12 +147,9 @@ export async function handler(input, opts = {}) {
       board_writes: []
     };
 
-    const decisionWrite = await writeArtifact(board_id, {
-      type: 'decision',
-      payload: { ...decisionPayload, response }
-    }, statePath);
+    const decisionWrite = await writeArtifact(board_id, 'decision', { ...decisionPayload, response }, statePath);
 
-    const personaWrite = await writeArtifact(board_id, { type: 'persona_set', payload: updatedPersonaSet }, statePath);
+    const personaWrite = await writeArtifact(board_id, 'persona_set', updatedPersonaSet, statePath);
 
     response.board_writes = [
       { type: 'decision', success: true, ref: decisionWrite.ref },
