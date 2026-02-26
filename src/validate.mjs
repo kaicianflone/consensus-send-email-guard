@@ -1,4 +1,4 @@
-const TOP_LEVEL = new Set(['board_id', 'email_draft', 'sender_profile', 'constraints', 'persona_set_id']);
+const TOP_LEVEL = new Set(['board_id', 'email_draft', 'sender_profile', 'constraints', 'persona_set_id', 'mode', 'external_votes']);
 const EMAIL_KEYS = new Set(['to', 'subject', 'body', 'attachments']);
 const SENDER_KEYS = new Set(['role', 'relationship', 'risk_tolerance']);
 const CONSTRAINT_KEYS = new Set(['tone', 'no_legal_claims', 'no_pricing_promises', 'no_sensitive_data']);
@@ -28,5 +28,14 @@ export function validateInput(input) {
   }
 
   if (input.persona_set_id !== undefined && typeof input.persona_set_id !== 'string') return 'persona_set_id must be string';
+  if (input.mode !== undefined && !['persona', 'external_agent'].includes(input.mode)) return 'mode must be persona|external_agent';
+  if (input.external_votes !== undefined) {
+    if (!Array.isArray(input.external_votes)) return 'external_votes must be array';
+    for (const v of input.external_votes) {
+      if (!v || typeof v !== 'object') return 'external_votes items must be objects';
+      if (!['YES', 'NO', 'REWRITE'].includes(v.vote)) return 'external_votes.vote must be YES|NO|REWRITE';
+      if (typeof v.reputation_before !== 'number') return 'external_votes.reputation_before must be number';
+    }
+  }
   return null;
 }

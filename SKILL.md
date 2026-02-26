@@ -64,3 +64,9 @@ This skill exposes a canonical entrypoint:
 - `invoke(input, opts?) -> Promise<OutputJson | ErrorJson>`
 
 `invoke()` starts the guard flow, which then executes persona evaluation and consensus-interact-contract board operations (via shared guard-core wrappers where applicable).
+
+## external_agent mode
+
+Guards support two modes:
+- `mode="persona"` (default): guard loads/generates persona_set and runs internal persona voting.
+- `mode="external_agent"`: caller supplies `external_votes[]` from real agents; guard performs deterministic aggregation, policy checks, and board decision writes without requiring persona harness.

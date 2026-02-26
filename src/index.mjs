@@ -53,14 +53,17 @@ export async function handler(input, opts = {}) {
       return prior.response;
     }
 
+    const externalMode = input.mode === 'external_agent';
     let personaSet = null;
-    if (input.persona_set_id) {
-      personaSet = await getPersonaSet(board_id, input.persona_set_id, statePath);
+    if (!externalMode) {
+      if (input.persona_set_id) {
+        personaSet = await getPersonaSet(board_id, input.persona_set_id, statePath);
+      }
+      if (!personaSet) {
+        personaSet = await getLatestPersonaSet(board_id, statePath);
+      }
     }
-    if (!personaSet) {
-      personaSet = await getLatestPersonaSet(board_id, statePath);
-    }
-    if (!personaSet) {
+    if (!personaSet && !externalMode) {
       const generated = await generatePersonaSet({
         board_id,
         task_context: {
@@ -82,7 +85,9 @@ export async function handler(input, opts = {}) {
       };
     }
 
-    const votes = await generatePersonaVotes(personaSet, input.email_draft, input.constraints || {});
+    const votes = externalMode
+      ? input.external_votes
+      : await generatePersonaVotes(personaSet, input.email_draft, input.constraints || {});
     const aggregation = aggregateVotes(votes, policy);
 
     let rewrite_patch = {};
@@ -100,7 +105,7 @@ export async function handler(input, opts = {}) {
       timestamp,
       idempotency_key,
       email_summary,
-      persona_set_id: personaSet.persona_set_id,
+      persona_set_id: personaSet?.persona_set_id || input.persona_set_id || null,
       votes,
       aggregation: {
         method: aggregation.method,
@@ -115,14 +120,18 @@ export async function handler(input, opts = {}) {
       policy_snapshot: policy
     };
 
-    const rep = updateReputations(personaSet.personas, votes, aggregation.final_decision);
-    const updatedPersonaSet = {
-      ...personaSet,
-      persona_set_id: crypto.randomUUID(),
-      updated_at: timestamp,
-      lineage: { parent_persona_set_id: personaSet.persona_set_id },
-      personas: rep.personas
-    };
+    const rep = externalMode
+      ? { personas: [], updates: [] }
+      : updateReputations(personaSet.personas, votes, aggregation.final_decision);
+    const updatedPersonaSet = externalMode
+      ? null
+      : {
+          ...personaSet,
+          persona_set_id: crypto.randomUUID(),
+          updated_at: timestamp,
+          lineage: { parent_persona_set_id: personaSet.persona_set_id },
+          personas: rep.personas
+        };
 
     const response = {
       board_id,
@@ -133,7 +142,7 @@ export async function handler(input, opts = {}) {
         subject: email_summary.subject,
         risk_level: email_summary.risk_level
       },
-      persona_set_id: personaSet.persona_set_id,
+      persona_set_id: personaSet?.persona_set_id || input.persona_set_id || null,
       votes,
       aggregation: {
         method: aggregation.method,
@@ -151,11 +160,13 @@ export async function handler(input, opts = {}) {
 
     const decisionWrite = await writeDecision(board_id, { ...decisionPayload, response }, statePath);
 
-    const personaWrite = await writeArtifact(board_id, 'persona_set', updatedPersonaSet, statePath);
+    const personaWrite = updatedPersonaSet
+      ? await writeArtifact(board_id, 'persona_set', updatedPersonaSet, statePath)
+      : null;
 
     response.board_writes = [
       { type: 'decision', success: true, ref: decisionWrite.ref },
-      { type: 'persona_set', success: true, ref: personaWrite.ref }
+      ...(personaWrite ? [{ type: 'persona_set', success: true, ref: personaWrite.ref }] : [])
     ];
 
     return response;

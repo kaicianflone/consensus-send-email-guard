@@ -48,3 +48,7 @@ This skill turns communication quality into measurable governance: fewer unsafe 
 ## Tool-call boundary
 
 To avoid orchestration drift, this skill routes board operations through the consensus-interact contract surface (directly or via guard-core wrappers). This preserves a single governance interaction model while allowing domain-specific decision logic.
+
+## external-agent interoperability
+
+This skill can consume externally generated agent votes (`external_agent` mode) while preserving consensus-interact board governance. That enables heterogeneous multi-agent systems to use the same arbitration and audit trail without adopting persona orchestration.
