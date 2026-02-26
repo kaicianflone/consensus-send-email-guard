@@ -1,0 +1,149 @@
+{
+  "board_id": "board_demo",
+  "decision_id": "38c53455-f093-4ecf-b2df-306efa7faa1b",
+  "timestamp": "2026-02-26T19:13:15.271Z",
+  "email_summary": {
+    "to_count": 1,
+    "subject": "We guarantee 30% cost reduction this quarter",
+    "risk_level": "high"
+  },
+  "persona_set_id": "368d211d-6d89-4a3d-9c5c-0018a288640f",
+  "votes": [
+    {
+      "persona_id": "persona_1",
+      "name": "Clarity Editor",
+      "reputation_before": 0.55,
+      "vote": "NO",
+      "confidence": 0.9,
+      "reasons": [
+        "Policy/constraint risk found."
+      ],
+      "red_flags": [
+        "pricing_guarantee",
+        "sensitive_data"
+      ],
+      "suggested_edits": [
+        "Remove guarantees and convert to probabilistic wording."
+      ]
+    },
+    {
+      "persona_id": "persona_2",
+      "name": "Trust Builder",
+      "reputation_before": 0.64,
+      "vote": "NO",
+      "confidence": 0.9,
+      "reasons": [
+        "Policy/constraint risk found."
+      ],
+      "red_flags": [
+        "pricing_guarantee",
+        "sensitive_data"
+      ],
+      "suggested_edits": [
+        "Remove guarantees and convert to probabilistic wording."
+      ]
+    },
+    {
+      "persona_id": "persona_3",
+      "name": "Tone Coach",
+      "reputation_before": 0.73,
+      "vote": "NO",
+      "confidence": 0.9,
+      "reasons": [
+        "Policy/constraint risk found."
+      ],
+      "red_flags": [
+        "pricing_guarantee",
+        "sensitive_data"
+      ],
+      "suggested_edits": [
+        "Remove guarantees and convert to probabilistic wording."
+      ]
+    },
+    {
+      "persona_id": "persona_4",
+      "name": "Audience Analyst",
+      "reputation_before": 0.81,
+      "vote": "NO",
+      "confidence": 0.9,
+      "reasons": [
+        "Policy/constraint risk found."
+      ],
+      "red_flags": [
+        "pricing_guarantee",
+        "sensitive_data"
+      ],
+      "suggested_edits": [
+        "Remove guarantees and convert to probabilistic wording."
+      ]
+    },
+    {
+      "persona_id": "persona_5",
+      "name": "Crisis Communicator",
+      "reputation_before": 0.9,
+      "vote": "NO",
+      "confidence": 0.9,
+      "reasons": [
+        "Policy/constraint risk found."
+      ],
+      "red_flags": [
+        "pricing_guarantee",
+        "sensitive_data"
+      ],
+      "suggested_edits": [
+        "Remove guarantees and convert to probabilistic wording."
+      ]
+    }
+  ],
+  "aggregation": {
+    "method": "WEIGHTED_APPROVAL_VOTE",
+    "weighted_yes": 0,
+    "weighted_no": 1,
+    "weighted_rewrite": 0,
+    "hard_block": true,
+    "rationale": [
+      "hard_block detected"
+    ]
+  },
+  "final_decision": "BLOCK",
+  "rewrite_patch": {},
+  "persona_updates": [
+    {
+      "persona_id": "persona_1",
+      "reputation_after": 0.57,
+      "delta": 0.02
+    },
+    {
+      "persona_id": "persona_2",
+      "reputation_after": 0.66,
+      "delta": 0.02
+    },
+    {
+      "persona_id": "persona_3",
+      "reputation_after": 0.75,
+      "delta": 0.02
+    },
+    {
+      "persona_id": "persona_4",
+      "reputation_after": 0.83,
+      "delta": 0.02
+    },
+    {
+      "persona_id": "persona_5",
+      "reputation_after": 0.92,
+      "delta": 0.02
+    }
+  ],
+  "board_writes": [
+    {
+      "type": "decision",
+      "success": true,
+      "ref": "sub_a327fa43-4685-4801-8098-86dec7010995"
+    },
+    {
+      "type": "persona_set",
+      "success": true,
+      "ref": "sub_a828a390-1226-4b68-bb4a-bf0a6c4fe994"
+    }
+  ]
+}
