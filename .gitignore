@@ -1,0 +1,6 @@
+node_modules/
+out/
+.consensus/
+.clawhub/
+.DS_Store
+*.log
