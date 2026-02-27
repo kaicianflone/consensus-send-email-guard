@@ -12,6 +12,7 @@ import {
   getDecisionByIdempotency,
   writeArtifact,
   writeDecision,
+  resolveStatePath,
 } from 'consensus-guard-core/src/index.mjs';
 
 const DEFAULT_POLICY = {
@@ -38,7 +39,7 @@ function summarize(email_draft, constraints) {
 
 export async function handler(input, opts = {}) {
   const board_id = input?.board_id;
-  const statePath = opts.statePath || process.env.CONSENSUS_STATE_FILE || './.consensus/board-state.json';
+  const statePath = resolveStatePath(opts);
 
   try {
     const validationError = validateInput(input);
