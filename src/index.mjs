@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { handler as generatePersonaSet } from '../../consensus-persona-generator/src/index.mjs';
+import { handler as generatePersonaSet } from 'consensus-persona-generator/src/index.mjs';
 import { generatePersonaVotes, generateRewritePatch } from './llm.mjs';
 import { validateInput } from './validate.mjs';
 import {

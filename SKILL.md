@@ -3,6 +3,8 @@ name: consensus-send-email-guard
 description: Persona-weighted pre-send email governance for AI systems. Produces APPROVE/BLOCK/REWRITE decisions, writes decision artifacts to the board ledger, updates persona reputation over time, and returns strict machine-parseable JSON.
 homepage: https://github.com/kaicianflone/consensus-send-email-guard
 source: https://github.com/kaicianflone/consensus-send-email-guard
+metadata:
+  {"openclaw": {"requires": {"bins": ["node", "npm", "tsx"]}}}
 ---
 
 # consensus-send-email-guard

@@ -1,16 +1,19 @@
 {
   "name": "consensus-send-email-guard",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
-  "private": true,
   "scripts": {
     "test": "node --test --import tsx",
     "demo": "node --import tsx run.js --input ./examples/email-input.json"
   },
   "dependencies": {
-    "@consensus-tools/consensus-tools": "file:../consensus-tools",
-    "consensus-guard-core": "file:../consensus-guard-core",
+    "@consensus-tools/consensus-tools": "^0.1.7",
+    "consensus-guard-core": "github:kaicianflone/consensus-guard-core#v1.1.1",
+    "consensus-persona-generator": "github:kaicianflone/consensus-persona-generator#v1.1.1",
     "tsx": "^4.20.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
 }
