@@ -4,7 +4,7 @@ description: Persona-weighted pre-send email governance for AI systems. Produces
 homepage: https://github.com/kaicianflone/consensus-send-email-guard
 source: https://github.com/kaicianflone/consensus-send-email-guard
 metadata:
-  {"openclaw": {"requires": {"bins": ["node", "tsx"], "env": ["OPENAI_API_KEY"]}}}
+  {"openclaw": {"requires": {"bins": ["node", "tsx"]}}}
 ---
 
 # consensus-send-email-guard
@@ -49,7 +49,8 @@ It converts raw generation into governed action with auditability.
 - runtime binaries: `node`, `tsx`
 - network calls: none in the guard decision path itself
 - conditional network behavior: if a run needs persona generation and your persona-generator backend uses an external LLM, that backend may perform outbound API calls
-- credentials: `OPENAI_API_KEY` (or equivalent provider key) may be required **only** for persona generation in LLM-backed setups; if `persona_set_id` is provided, guards can run without LLM credentials
+- credentials: none required by default
+- optional credentials: external LLM-backed persona generation may require provider API keys (e.g., `OPENAI_API_KEY`) depending on your deployed persona-generator backend
 - filesystem writes: board/state artifacts under the configured consensus state path
 
 ## Dependency trust model
