@@ -34,7 +34,7 @@ test('send-email-guard produces decision and board writes', async () => {
   const out = await handler({ ...emailInput, persona_set_id: p.persona_set_id }, { statePath });
 
   assert.equal(Boolean(out.error), false);
-  assert.equal(out.board_writes.length, 2);
+  assert.equal(out.board_writes.length, 1);
   assert.equal(['APPROVE', 'BLOCK', 'REWRITE'].includes(out.final_decision), true);
   assert.equal(out.votes.length, 5);
 });

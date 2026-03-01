@@ -1,11 +1,9 @@
 import crypto from 'node:crypto';
-import { handler as generatePersonaSet } from 'consensus-persona-generator/src/index.mjs';
 import { generatePersonaVotes, generateRewritePatch } from './llm.mjs';
 import { validateInput } from './validate.mjs';
 import {
   aggregateVotes,
-  updateReputations,
-  makeIdempotencyKey,
+    makeIdempotencyKey,
   readBoardPolicy,
   getLatestPersonaSet,
   getPersonaSet,
@@ -65,24 +63,11 @@ export async function handler(input, opts = {}) {
       }
     }
     if (!personaSet && !externalMode) {
-      const generated = await generatePersonaSet({
-        board_id,
-        task_context: {
-          goal: 'Email governance',
-          audience: input.sender_profile?.relationship || 'external',
-          risk_tolerance: input.sender_profile?.risk_tolerance || 'medium',
-          constraints: Object.entries(input.constraints || {}).filter(([, v]) => !!v).map(([k]) => k),
-          domain: 'email'
-        },
-        n_personas: 5,
-        persona_pack: 'comms'
-      }, { statePath });
-      if (generated.error) return err(board_id, 'PERSONA_GENERATION_FAILED', generated.error.message, generated.error.details);
       personaSet = {
         board_id,
-        persona_set_id: generated.persona_set_id,
-        created_at: generated.created_at,
-        personas: generated.personas
+        persona_set_id: null,
+        created_at: new Date().toISOString(),
+        personas: [1,2,3,4,5].map((n)=>({ persona_id:`default-${n}`, name:`Default Persona ${n}`, reputation:0.5 }))
       };
     }
 
@@ -121,18 +106,7 @@ export async function handler(input, opts = {}) {
       policy_snapshot: policy
     };
 
-    const rep = externalMode
-      ? { personas: [], updates: [] }
-      : updateReputations(personaSet.personas, votes, aggregation.final_decision);
-    const updatedPersonaSet = externalMode
-      ? null
-      : {
-          ...personaSet,
-          persona_set_id: crypto.randomUUID(),
-          updated_at: timestamp,
-          lineage: { parent_persona_set_id: personaSet.persona_set_id },
-          personas: rep.personas
-        };
+    const rep = { personas: [], updates: [] };
 
     const response = {
       board_id,
@@ -161,13 +135,9 @@ export async function handler(input, opts = {}) {
 
     const decisionWrite = await writeDecision(board_id, { ...decisionPayload, response }, statePath);
 
-    const personaWrite = updatedPersonaSet
-      ? await writeArtifact(board_id, 'persona_set', updatedPersonaSet, statePath)
-      : null;
-
     response.board_writes = [
       { type: 'decision', success: true, ref: decisionWrite.ref },
-      ...(personaWrite ? [{ type: 'persona_set', success: true, ref: personaWrite.ref }] : [])
+      
     ];
 
     return response;

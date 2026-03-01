@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "consensus-guard-core": "^1.1.4",
-    "consensus-persona-generator": "^1.1.4",
     "tsx": "^4.20.3"
   },
   "license": "MIT",

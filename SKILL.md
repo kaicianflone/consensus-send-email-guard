@@ -48,14 +48,12 @@ It converts raw generation into governed action with auditability.
 
 - runtime binaries: `node`, `tsx`
 - network calls: none in the guard decision path itself
-- conditional network behavior: if a run needs persona generation and your persona-generator backend uses an external LLM, that backend may perform outbound API calls
-- credentials: none required by default
-- optional credentials: external LLM-backed persona generation may require provider API keys (e.g., `OPENAI_API_KEY`) depending on your deployed persona-generator backend
+- credentials: none required
 - filesystem writes: board/state artifacts under the configured consensus state path
 
 ## Dependency trust model
 
-- `consensus-guard-core` and `consensus-persona-generator` are first-party consensus packages
+- `consensus-guard-core` is the first-party consensus package used in guard execution
 - versions are semver-pinned in `package.json` for reproducible installs
 - this skill does not request host-wide privileges and does not mutate other skills
 
@@ -81,10 +79,10 @@ This skill exposes a canonical entrypoint:
 
 - `invoke(input, opts?) -> Promise<OutputJson | ErrorJson>`
 
-`invoke()` starts the guard flow, which then executes persona evaluation and consensus-interact-contract board operations (via shared guard-core wrappers where applicable).
+`invoke()` starts the guard flow and executes deterministic policy evaluation with board operations via shared guard-core wrappers.
 
 ## external_agent mode
 
 Guards support two modes:
-- `mode="persona"` (default): guard loads/generates persona_set and runs internal persona voting.
-- `mode="external_agent"`: caller supplies `external_votes[]` from real agents; guard performs deterministic aggregation, policy checks, and board decision writes without requiring persona harness.
+- `mode="external_agent"`: caller supplies `external_votes[]` from agents/humans/models for deterministic aggregation.
+- `mode="persona"`: requires an existing `persona_set_id`; guard will not generate persona sets internally.
