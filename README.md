@@ -2,30 +2,40 @@
 
 Pre-send governance for outbound email automation.
 
-`consensus-send-email-guard` evaluates a draft email before delivery and returns:
+`consensus-send-email-guard` evaluates an email draft before delivery and returns:
 
 - `APPROVE`
 - `BLOCK`
 - `REWRITE`
 
-with structured reasoning and board-native artifacts.
+with structured rationale and board-native audit artifacts.
 
-## Why this matters
+## Typical use cases
 
-Email is high-impact and hard to undo. This guard helps teams prevent accidental policy violations, risky claims, and low-quality messaging in automated outbound flows.
+- customer-facing lifecycle emails
+- sales/prospecting automation
+- sensitive account or policy notifications
+- high-trust operational communications
+
+## What it evaluates
+
+- policy and tone compliance
+- risky guarantees or commitments
+- confidentiality and sensitive data concerns
+- rewrite quality for fixable drafts
 
 ## Core capabilities
 
-- strict input schema validation
-- persona-weighted voting with deterministic aggregation
-- rewrite guidance for fixable drafts
-- idempotent retries (same draft/context = same decision)
-- board-native decision + persona update writes
+- strict schema validation
+- deterministic persona-weighted voting
+- idempotent retry behavior
+- `rewrite_patch` generation path for actionable edits
+- board-native decision + persona update artifacts
 
-## Output shape (high level)
+## Output highlights
 
 - decision metadata (`decision_id`, `timestamp`)
-- vote details + aggregation rationale
+- vote + aggregation breakdown
 - `final_decision`
 - optional `rewrite_patch`
 - `board_writes[]`
@@ -43,6 +53,7 @@ node --import tsx run.js --input ./examples/email-input.json
 npm test
 ```
 
-## Continuous improvement
+## Related docs
 
-See `AI-SELF-IMPROVEMENT.md` for ongoing policy and workflow refinement.
+- `SKILL.md`
+- `AI-SELF-IMPROVEMENT.md`
