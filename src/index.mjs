@@ -8,7 +8,6 @@ import {
   getLatestPersonaSet,
   getPersonaSet,
   getDecisionByIdempotency,
-  writeArtifact,
   writeDecision,
   resolveStatePath,
 } from 'consensus-guard-core/src/index.mjs';
@@ -142,7 +141,7 @@ export async function handler(input, opts = {}) {
 
     return response;
   } catch (e) {
-    return err(board_id || '', 'SEND_EMAIL_GUARD_FAILED', e.message || 'unknown error', { statePath });
+    return err(board_id || '', 'SEND_EMAIL_GUARD_FAILED', e.message || 'unknown error');
   }
 }
 

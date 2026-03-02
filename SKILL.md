@@ -1,10 +1,12 @@
 ---
 name: consensus-send-email-guard
-description: Persona-weighted pre-send email governance for AI systems. Produces APPROVE/BLOCK/REWRITE decisions, writes decision artifacts to the board ledger, updates persona reputation over time, and returns strict machine-parseable JSON.
+description: Persona-weighted pre-send email governance for AI systems. Produces APPROVE/BLOCK/REWRITE decisions, writes decision artifacts to the board ledger, and returns strict machine-parseable JSON.
 homepage: https://github.com/kaicianflone/consensus-send-email-guard
 source: https://github.com/kaicianflone/consensus-send-email-guard
+upstream:
+  consensus-guard-core: https://github.com/kaicianflone/consensus-guard-core
 metadata:
-  {"openclaw": {"requires": {"bins": ["node", "tsx"]}}}
+  {"openclaw": {"requires": {"bins": ["node", "tsx"], "env": ["CONSENSUS_STATE_FILE", "CONSENSUS_STATE_ROOT"]}}}
 ---
 
 # consensus-send-email-guard
@@ -17,7 +19,7 @@ metadata:
 - aggregates votes by reputation (weighted approval policy)
 - enforces hard-block categories (sensitive data, legal/medical certainty, disallowed guarantees)
 - returns final decision: `APPROVE | BLOCK | REWRITE`
-- writes `decision` and updated `persona_set` artifacts to board state
+- writes `decision` artifacts to board state
 
 ## Why this matters
 
@@ -47,8 +49,9 @@ It converts raw generation into governed action with auditability.
 ## Runtime, credentials, and network behavior
 
 - runtime binaries: `node`, `tsx`
-- network calls: none in the guard decision path itself
+- network calls: none in guard decision logic
 - credentials: none required
+- environment config read by this package: `CONSENSUS_STATE_FILE`, `CONSENSUS_STATE_ROOT`
 - filesystem writes: board/state artifacts under the configured consensus state path
 
 ## Dependency trust model
@@ -56,6 +59,12 @@ It converts raw generation into governed action with auditability.
 - `consensus-guard-core` is the first-party consensus package used in guard execution
 - versions are semver-pinned in `package.json` for reproducible installs
 - this skill does not request host-wide privileges and does not mutate other skills
+
+## Install
+
+```bash
+npm i consensus-send-email-guard
+```
 
 ## Quick start
 

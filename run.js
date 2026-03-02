@@ -9,10 +9,26 @@ if (inputIdx === -1) {
   process.exit(2);
 }
 
-const inputPath = args[inputIdx + 1];
-const input = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+const inputArg = args[inputIdx + 1];
+if (!inputArg) {
+  console.error('Usage: node run.js --input <json-file>');
+  process.exit(2);
+}
+
+const cwd = process.cwd();
+const resolvedInputPath = path.resolve(cwd, inputArg);
+if (!resolvedInputPath.startsWith(cwd + path.sep) && resolvedInputPath !== cwd) {
+  console.error('Refusing to read input outside current working directory');
+  process.exit(2);
+}
+if (path.extname(resolvedInputPath).toLowerCase() !== '.json') {
+  console.error('Input must be a .json file');
+  process.exit(2);
+}
+
+const input = JSON.parse(fs.readFileSync(resolvedInputPath, 'utf8'));
 const out = await handler(input);
-const outDir = path.resolve('./out');
+const outDir = path.resolve(cwd, 'out');
 fs.mkdirSync(outDir, { recursive: true });
 const outFile = path.join(outDir, `send-email-guard-${Date.now()}.json`);
 fs.writeFileSync(outFile, JSON.stringify(out, null, 2));
