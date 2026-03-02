@@ -10,7 +10,7 @@ import {
   getDecisionByIdempotency,
   writeDecision,
   resolveStatePath,
-} from 'consensus-guard-core/src/index.mjs';
+} from 'consensus-guard-core';
 
 const DEFAULT_POLICY = {
   method: 'WEIGHTED_APPROVAL_VOTE',
