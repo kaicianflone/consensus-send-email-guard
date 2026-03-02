@@ -64,7 +64,6 @@ It converts raw generation into governed action with auditability.
 
 - runtime binaries: `node`, `tsx`
 - network calls: none in guard decision logic
-- credentials: none required
 - environment config read by this package: `CONSENSUS_STATE_FILE`, `CONSENSUS_STATE_ROOT`
 - filesystem writes: board/state artifacts under the configured consensus state path
 
