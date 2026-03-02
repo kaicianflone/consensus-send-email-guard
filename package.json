@@ -7,7 +7,7 @@
     "demo": "node --import tsx run.js --input ./examples/email-input.json"
   },
   "dependencies": {
-    "consensus-guard-core": "^1.1.10",
+    "consensus-guard-core": "^1.1.11",
     "tsx": "^4.20.3"
   },
   "license": "MIT",
