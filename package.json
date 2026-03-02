@@ -13,5 +13,11 @@
   "license": "MIT",
   "engines": {
     "node": ">=18"
+  },
+  "config": {
+    "requiredEnv": [
+      "CONSENSUS_STATE_FILE",
+      "CONSENSUS_STATE_ROOT"
+    ]
   }
 }

@@ -40,6 +40,14 @@ with structured rationale and board-native audit artifacts.
 - optional `rewrite_patch`
 - `board_writes[]`
 
+## Environment + state path
+
+This package reads state-path configuration from:
+- `CONSENSUS_STATE_FILE`
+- `CONSENSUS_STATE_ROOT`
+
+Use a dedicated non-privileged directory for state; do not point state paths at system or secrets directories.
+
 ## Quick start
 
 ```bash
