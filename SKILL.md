@@ -1,7 +1,7 @@
 ---
 name: consensus-send-email-guard
 description: Persona-weighted pre-send email governance for AI systems. Produces APPROVE/BLOCK/REWRITE decisions, writes decision artifacts to the board ledger, and returns strict machine-parseable JSON.
-version: 1.1.13
+version: 1.1.14
 homepage: https://github.com/kaicianflone/consensus-send-email-guard
 source: https://github.com/kaicianflone/consensus-send-email-guard
 upstream:
@@ -26,9 +26,6 @@ metadata:
     install:
       - kind: node
         package: consensus-send-email-guard
-        bins:
-          - node
-          - tsx
 ---
 
 # consensus-send-email-guard
